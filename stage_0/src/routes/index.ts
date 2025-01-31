@@ -11,7 +11,7 @@ router.get('/', c => {
 	return c.json({
 		email: student.email,
 		current_datetime: new Date().toISOString(),
-		github: student.github
+		github_url: student.github
 	});
 });
 
