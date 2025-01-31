@@ -4,7 +4,7 @@ const router = new Hono();
 
 const student = {
 	email: 'ayadiclaudius@gmail.com',
-	github: 'https://github.com/ClaudiusAyadi/hng12/tree/main/stage_0'
+	github: 'https://github.com/ClaudiusAyadi/hng12/blob/main/stage_0/README.md'
 };
 
 router.get('/', c => {
