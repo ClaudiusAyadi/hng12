@@ -1,0 +1,28 @@
+name: infodove
+services:
+  infodove:
+    container_name: infodove
+    build: .
+    restart: always
+    environment:
+      TZ: Africa/Lagos
+    logging:
+      driver: json-file
+    expose:
+      - 3000
+    volumes:
+      - ./:/usr/src/app
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.infodove.rule=Host(`infodove.claudiusa.xyz`)'
+      - 'traefik.http.routers.infodove.entrypoints=websecure'
+      - 'traefik.http.routers.infodove.service=infodove-service'
+      - 'traefik.http.services.infodove-service.loadbalancer.server.port=3000'
+      - 'traefik.http.routers.infodove.tls=true'
+      - 'traefik.http.routers.infodove.tls.certresolver=myresolver'
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true

@@ -1,12 +1,13 @@
 {
-  "name": "stage_0",
-  "scripts": {
-    "dev": "bun run --hot src/index.ts"
-  },
-  "dependencies": {
-    "hono": "^4.6.20"
-  },
-  "devDependencies": {
-    "@types/bun": "latest"
-  }
+	"name": "stage_0",
+	"scripts": {
+		"dev": "bun run --hot src/index.ts",
+		"build": "bun --bun build src/index.ts"
+	},
+	"dependencies": {
+		"hono": "^4.6.20"
+	},
+	"devDependencies": {
+		"@types/bun": "latest"
+	}
 }
