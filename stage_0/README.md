@@ -1,11 +1,1 @@
-To install dependencies:
-```sh
-bun install
-```
-
-To run:
-```sh
-bun run dev
-```
-
-open http://localhost:3000
+# InfoDove – _Swift, Simple, and Smart Info Retrieval. 🚀_
