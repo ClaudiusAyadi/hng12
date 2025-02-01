@@ -13,6 +13,6 @@ router.get('/', c => {
 		current_datetime: new Date().toISOString(),
 		github_url: student.github
 	});
-});
+}, 200);
 
 export default router;
