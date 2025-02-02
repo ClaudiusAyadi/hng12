@@ -14,8 +14,15 @@ services:
       - ./:/usr/src/app
     labels:
       - 'traefik.enable=true'
-      - 'traefik.http.routers.infodove.rule=Host(`infodove.claudiusa.xyz`)'
+      - 'traefik.http.routers.infodove.rule=Host(`infodove.claudiusa.xyz`) || Host(`www.infodove.claudiusa.xyz`)'
       - 'traefik.http.routers.infodove.entrypoints=websecure'
+      - 'traefik.http.routers.infodove.middlewares=redirect-to-https'
+      - 'traefik.http.routers.infodove.middlewares=redirect-to-non-www'
+      - 'traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https'
+      - 'traefik.http.middlewares.redirect-to-https.redirectscheme.permanent=true'
+      - 'traefik.http.middlewares.redirect-to-non-www.redirectregex.regex=^https?://www.infodove.claudiusa.xyz/(.*)'
+      - 'traefik.http.middlewares.redirect-to-non-www.redirectregex.replacement=https://infodove.claudiusa.xyz/$${1}'
+      - 'traefik.http.middlewares.redirect-to-non-www.redirectregex.permanent=true'
       - 'traefik.http.routers.infodove.service=infodove-service'
       - 'traefik.http.services.infodove-service.loadbalancer.server.port=3000'
       - 'traefik.http.routers.infodove.tls=true'
