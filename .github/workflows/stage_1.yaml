@@ -30,11 +30,25 @@ jobs:
           push: true
           tags: ghcr.io/${{ github.actor }}/hng-12-stage-1:latest
 
-      - name: Docker Stack Deploy
-        uses: cssnr/stack-deploy-action@v1
+      - name: Deploy Docker Stack on Swarm
+        uses: appleboy/ssh-action@master
         with:
-          name: hng-12-stage-1
-          file: ./stage_1/docker-stack.yaml
-          host: dovely.tech
-          user: deploy
-          ssh_key: ${{ secrets.SSH_KEY }}
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          script: |
+            cd /home/deploy/apps/hng12
+            echo "Copying docker-stack.yml..."
+            scp -o StrictHostKeyChecking=no  ./stage_1/docker-stack.yml  ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/deploy/apps/hng12/docker-stack.yml
+            if [ $? -ne 0 ]; then
+              echo "Failed to copy docker-stack.yml!"
+              exit 1
+            fi
+            echo "Deploying docker stack..."
+            docker stack deploy -c /home/deploy/apps/hng12/docker-stack.yml hng-12-stage-1
+            if [ $? -ne 0 ]; then
+              echo "Failed to deploy docker stack!"
+              exit 1
+            fi
+            echo "Docker stack deployed successfully!"
