@@ -2,7 +2,7 @@ name: number-facts-dev
 services:
   number-facts:
     container_name: number-facts
-    image: ghrc.io/claudiusayadi/hng-12-stage-1:latest
+    image: ghcr.io/claudiusayadi/hng-12-stage-1:latest
     restart: always
     ports:
       - '3001:3001'

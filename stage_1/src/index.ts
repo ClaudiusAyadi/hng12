@@ -31,4 +31,3 @@ const server = Bun.serve({
 console.log(`Server live on ${server.url}`);
 
 export type ApiType = typeof routes;
-export default app;
