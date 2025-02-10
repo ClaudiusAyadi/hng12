@@ -38,5 +38,5 @@ jobs:
           private_key: ${{ secrets.SSH_KEY }}
           scp_source: ./stage_1/docker-stack.yml
           scp_target: ~/apps/hng12/stage-1-stack.yml
-          ssh_commands: |
+          args: |
             docker stack deploy -c ~/apps/hng12/stage-1-stack.yml hng-12-stage-1
