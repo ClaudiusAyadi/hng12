@@ -31,10 +31,12 @@ jobs:
           tags: ghcr.io/${{ github.actor }}/hng-12-stage-1:latest
 
       - name: Deploy to Docker Swarm
-        uses: appleboy/ssh-action@master
+        uses: kostya-ten/ssh-server-deploy@v4
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            docker stack deploy -c stage_1/docker-stack.yml hng-12-stage-1
+          private_key: ${{ secrets.SSH_KEY }}
+          scp_source: ./stage_1/docker-stack.yml
+          scp_target: ~/apps/hng12/stage-1-stack.yml
+          ssh_commands: |
+            docker stack deploy -c ~/apps/hng12/stage-1-stack.yml hng-12-stage-1
