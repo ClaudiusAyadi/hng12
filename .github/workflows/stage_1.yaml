@@ -30,17 +30,11 @@ jobs:
           push: true
           tags: ghcr.io/${{ github.actor }}/hng-12-stage-1:latest
 
-      - name: Deploy to Docker Swarm
-        uses: kostya-ten/ssh-server-deploy@v4
+      - name: Docker Stack Deploy
+        uses: cssnr/stack-deploy-action@v1
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          private_key: ${{ secrets.SSH_KEY }}
-          scp_source: ./stage_1/docker-stack.yml
-          scp_target: ~/apps/hng12/stage-1-stack.yml
-          after_script: |
-            docker stack deploy -c ~/apps/hng12/docker-stack.yml hng-12-stage-1
-            if [ $? -ne 0 ]; then
-              echo "Docker stack deploy failed!"
-              exit 1
-            fi
+          name: hng-12-stage-1
+          file: ./stage_1/docker-stack.yaml
+          host: dovely.tech
+          user: deploy
+          ssh_key: ${{ secrets.SSH_KEY }}
