@@ -1,4 +1,4 @@
-name: Docker Image CI for GHCR
+name: Docker CI/CD Pipeline
 
 on:
   push:
@@ -6,35 +6,52 @@ on:
       - main
 
 jobs:
-  build-and-publish:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Login to GHCR
-        uses: docker/login-action@v2
+      - name: Set up SSH key
+        uses: webfactory/ssh-agent@v0.8.0
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GHRC }}
+          ssh-private-key: ${{ secrets.KEY }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          context: ./stage_1
+          context: .
           file: ./stage_1/Dockerfile
           push: true
-          tags: ghcr.io/${{ github.actor }}/hng-12-stage-1:latest
+          tags: ghcr.io/${{ github.actor }}/hng12-stage1:latest
 
-      - name: Docker Stack Deploy
-        uses: cssnr/stack-deploy-action@v1
-        with:
-          name: hng-12-stage-1
-          file: ./stage-1/docker-stack.yaml
-          host: dovely.tech
-          user: dovely
-          ssh_key: ${{ secrets.KEY }}
+      - name: Deploy to Server
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.HOST }} "
+            set -e
+
+            # Define the deployment directory
+            DEPLOY_DIR=/home/dovely/data/hng12/
+
+            # Create the deployment directory if it doesn't exist
+            mkdir -p $DEPLOY_DIR
+
+            # Copy the compose.yml file to the server
+            scp -o StrictHostKeyChecking=no ./stage_1/compose.yml ${{ secrets.USER }}@${{ secrets.HOST }}:$DEPLOY_DIR/stage1.yml
+            if [ $? -ne 0 ]; then
+              echo 'Failed to copy compose.yml'
+              exit 1
+            fi
+
+            # Navigate to the deployment directory
+            cd $DEPLOY_DIR
+
+            # Stop the old deployment (if it exists)
+            docker compose -f stage1.yml down || true
+
+            # Pull the latest image
+            docker compose -f stage1.yml pull
+
+            # Start the updated application
+            docker compose -f stage1-yml up -d
+          "

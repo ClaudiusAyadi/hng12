@@ -1,0 +1,25 @@
+name: stage1
+services:
+  stage1:
+    container_name: stage1
+    image: ghcr.io/claudiusayadi/hng-12-stage-1:latest
+    restart: always
+    environment:
+      - TZ=Africa/Lagos
+      - NODE_ENV=production
+    logging:
+      driver: json-file
+    networks:
+      - proxy
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.stage1.rule=Host(`stage1.dovely.tech`)'
+      - 'traefik.http.routers.stage1.entrypoints=live'
+      - 'traefik.http.routers.stage1.service=stage1-service'
+      - 'traefik.http.services.stage1-service.loadbalancer.server.port=3001'
+      - 'traefik.http.routers.stage1.tls=true'
+      - 'traefik.http.routers.stage1.tls.certresolver=myresolver'
+
+networks:
+  proxy:
+    external: true
