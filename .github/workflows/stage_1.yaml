@@ -35,8 +35,7 @@ jobs:
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          port: 22
+          key: ${{ secrets.SSH_SECRET }}
           script: |
             cd /home/deploy/apps/hng12
             echo "Copying docker-stack.yml..."
