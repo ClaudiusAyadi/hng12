@@ -1,0 +1,17 @@
+name: number-facts-dev
+services:
+  number-facts:
+    container_name: number-facts
+    image: ghrc.io/claudiusayadi/hng-12-stage-1:latest
+    restart: always
+    ports:
+      - '3001:3001'
+    volumes:
+      - .:/app
+      - /app/node_modules # Prevent host node_modules from overriding container's
+    environment:
+      - TZ=Africa/Lagos
+      - NODE_ENV=development
+    logging:
+      driver: json-file
+    # command: bun run dev

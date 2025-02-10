@@ -1,0 +1,29 @@
+name: number-facts
+services:
+  numberFacts:
+    container_name: number-facts
+    image: ghrc.io/claudiusayadi/hng-12-stage-1:latest
+    restart: always
+    environment:
+      TZ: Africa/Lagos
+    logging:
+      driver: json-file
+    expose:
+      - 3001
+    volumes:
+      - .:/app
+      - /app/node_modules
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.number-facts.rule=Host(`stage1.dovely.tech`)'
+      - 'traefik.http.routers.number-facts.entrypoints=live'
+      - 'traefik.http.routers.number-facts.service=number-facts-service'
+      - 'traefik.http.services.number-facts-service.loadbalancer.server.port=3001'
+      - 'traefik.http.routers.number-facts.tls=true'
+      - 'traefik.http.routers.number-facts.tls.certresolver=myresolver'
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true
