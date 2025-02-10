@@ -1,35 +1,28 @@
-name: infodove
-services:
-  infodove:
-    container_name: infodove
-    build: .
-    restart: always
-    environment:
-      TZ: Africa/Lagos
-    logging:
-      driver: json-file
-    expose:
-      - 3000
-    volumes:
-      - ./:/usr/src/app
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.infodove.rule=Host(`infodove.claudiusa.xyz`) || Host(`www.infodove.claudiusa.xyz`)'
-      - 'traefik.http.routers.infodove.entrypoints=websecure'
-      - 'traefik.http.routers.infodove.middlewares=redirect-to-https'
-      - 'traefik.http.routers.infodove.middlewares=redirect-to-non-www'
-      - 'traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https'
-      - 'traefik.http.middlewares.redirect-to-https.redirectscheme.permanent=true'
-      - 'traefik.http.middlewares.redirect-to-non-www.redirectregex.regex=^https?://www.infodove.claudiusa.xyz/(.*)'
-      - 'traefik.http.middlewares.redirect-to-non-www.redirectregex.replacement=https://infodove.claudiusa.xyz/$${1}'
-      - 'traefik.http.middlewares.redirect-to-non-www.redirectregex.permanent=true'
-      - 'traefik.http.routers.infodove.service=infodove-service'
-      - 'traefik.http.services.infodove-service.loadbalancer.server.port=3000'
-      - 'traefik.http.routers.infodove.tls=true'
-      - 'traefik.http.routers.infodove.tls.certresolver=myresolver'
-    networks:
-      - traefik
+# name: number-facts
+# services:
+#   numberFacts:
+#     container_name: number-facts
+#     build: .
+#     restart: always
+#     environment:
+#       TZ: Africa/Lagos
+#     logging:
+#       driver: json-file
+#     expose:
+#       - 3000
+#     volumes:
+#       - ./:/usr/src/app
+#     labels:
+#       - 'traefik.enable=true'
+#       - 'traefik.http.routers.number-facts.rule=Host(`stage1.dovely.tech`)'
+#       - 'traefik.http.routers.number-facts.entrypoints=local'
+#       - 'traefik.http.routers.number-facts.service=number-facts-service'
+#       - 'traefik.http.services.number-facts-service.loadbalancer.server.port=3000'
+#       - 'traefik.http.routers.number-facts.tls=true'
+#       - 'traefik.http.routers.number-facts.tls.certresolver=myresolver'
+#     networks:
+#       - traefik
 
-networks:
-  traefik:
-    external: true
+# networks:
+#   traefik:
+#     external: true
