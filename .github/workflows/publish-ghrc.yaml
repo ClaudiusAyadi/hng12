@@ -25,7 +25,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          context: .
+          context: ./stage_1
           file: ./stage_1/Dockerfile
           push: true
           tags: ghcr.io/hng-12-stage-1:latest # Simplify tag definition
