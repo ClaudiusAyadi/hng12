@@ -1,0 +1,16 @@
+services:
+  portainer:
+    image: ghcr.io/claudiusayadi/hng-12-stage-1:latest
+    hostname: '{{.Node.Hostname}}'
+    networks:
+      - proxy
+    deploy:
+      mode: global
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.stage-1.rule=Host(`stage1.dovely.tech`)
+        - traefik.http.services.stage-1.loadbalancer.server.port=3001
+
+networks:
+  proxy:
+    external: true
